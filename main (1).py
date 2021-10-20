@@ -8,17 +8,23 @@ data = response_API.text
 parse_json = json.loads(data)
 lastBlock = parse_json['number']
 print("Current block:",lastBlock)
-targetBlock = lastBlock + 1
+targetBlock = lastBlock + 5
 print("Target block is: ",targetBlock)
+#time.sleep(3)
 
 while True:
-  response_API = requests.get('https://apilist.tronscan.org/api/block/latest')
+  params = {'number': targetBlock}
+  response = requests.get('https://apilist.tronscan.org/api/block?',
+  params=params)
+  url = (response.url)
+  response_API = requests.get(url)
   data = response_API.text
   parse_json = json.loads(data)
-  newBlock = parse_json['number']
-  if newBlock >= targetBlock:
+  newBlock = parse_json["data"][0]["number"]
+  print(newBlock)
+  if newBlock == targetBlock:
     print("Target block mined!") # means that the block was mined obviously
-    hash = parse_json['hash']  #gets the hash
+    hash = parse_json["data"][0]["hash"]  #gets the hash
     print("hash is: ",hash)
     hex = hash[0:20] # collects the first 20 characters of the hash - hexadecimal format
     print("hexadecimal str: ",hex) 
